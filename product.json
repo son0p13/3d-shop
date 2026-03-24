@@ -1,0 +1,11 @@
+
+  {
+    "name": "Bã mía in 3d",
+    "description": " Mô hình bã mía ",
+    "basePrice": 350000,
+    "image": "https://minhancomputercdn.com/media/product/6215_r___ng_16cm.jpg",
+    "modelUrl": "",
+    "createdAt": {"$date": "2024-03-01T10:00:00Z"},
+    "updatedAt": {"$date": "2024-03-01T10:00:00Z"}
+  }
+  

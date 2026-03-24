@@ -1,65 +1,160 @@
-import Image from "next/image";
+import dbConnect from '@/lib/mongodb';
+import { Flame, Sparkles, SearchX, ArrowRight } from 'lucide-react'; 
+import Product from '@/models/Product';
+import SearchBar from '@/components/SearchBar'; 
+import ProductFilter from '@/components/ProductFilter';
+import ProductCard from '@/components/ProductCard'; 
+import HeroBanner from '@/components/HeroBanner';
+import Link from 'next/link';
 
-export default function Home() {
+// Hàm chuẩn hóa dữ liệu từ MongoDB để truyền vào Client Component
+const formatProduct = (product: any) => ({
+  ...product,
+  _id: product._id.toString(),
+  createdAt: product.createdAt ? product.createdAt.toString() : null,
+  updatedAt: product.updatedAt ? product.updatedAt.toString() : null,
+});
+
+// ==========================================================
+// 1. LẤY DỮ LIỆU KHI KHÁCH ĐANG LỌC/TÌM KIẾM
+// ==========================================================
+async function getFilteredProducts(keyword: string, category: string, price: string) {
+  await dbConnect();
+  const filter: any = {};
+
+  if (keyword) {
+    filter.name = { $regex: keyword, $options: 'i' };
+  }
+
+  if (category && category !== 'Tất cả') {
+    filter.category = category;
+  }
+
+  if (price === 'duoi-100') {
+    filter.basePrice = { $lt: 100000 };
+  } else if (price === '100-300') {
+    filter.basePrice = { $gte: 100000, $lte: 300000 };
+  } else if (price === 'tren-300') {
+    filter.basePrice = { $gt: 300000 };
+  }
+
+  const products = await Product.find(filter).sort({ createdAt: -1 }).lean(); 
+  return products.map(formatProduct);
+}
+
+// ==========================================================
+// 2. LẤY DỮ LIỆU MẶC ĐỊNH CHO TRANG CHỦ
+// ==========================================================
+async function getDashboardProducts() {
+  await dbConnect();
+  const newProducts = await Product.find({}).sort({ createdAt: -1 }).limit(8).lean();
+  const featuredProducts = await Product.find({}).sort({ basePrice: -1 }).limit(8).lean();
+
+  return {
+    newProducts: newProducts.map(formatProduct),
+    featuredProducts: featuredProducts.map(formatProduct)
+  };
+}
+
+type Props = { searchParams: Promise<{ [key: string]: string | string[] | undefined }> };
+
+export default async function Home({ searchParams }: Props) {
+  const params = await searchParams;
+  
+  const keyword = (typeof params.search === 'string' ? params.search : '') || '';
+  const category = (typeof params.category === 'string' ? params.category : '') || '';
+  const price = (typeof params.price === 'string' ? params.price : '') || '';
+  
+  // 👉 PHẦN THÊM MỚI: Nhận diện lệnh "Xem tất cả"
+  const viewAll = params.view === 'all';
+  
+  // Cập nhật isFiltering bao gồm cả trường hợp xem tất cả
+  const isFiltering = keyword || (category && category !== 'Tất cả') || price || viewAll;
+
+  let filteredProducts: any[] = [];
+  let newProducts: any[] = [];
+  let featuredProducts: any[] = [];
+
+  if (isFiltering) {
+    filteredProducts = await getFilteredProducts(keyword, category, price);
+  } else {
+    const dashboardData = await getDashboardProducts();
+    newProducts = dashboardData.newProducts;
+    featuredProducts = dashboardData.featuredProducts;
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen p-4 sm:p-8 bg-gray-50">
+      
+      {/* THANH TÌM KIẾM & BỘ LỌC */}
+      <div className="max-w-7xl mx-auto mb-8 flex flex-col items-center gap-6">
+        <h1 className="text-4xl font-extrabold text-blue-600">Mixi3Ds</h1>
+        <SearchBar />
+      </div>
+
+      {/* banner */}
+      {!isFiltering && <HeroBanner />}
+      
+      {!isFiltering && (
+        <div className="max-w-7xl mx-auto mt-6 flex justify-end">
+          <Link 
+            href="/?view=all" 
+            className="flex items-center gap-2 bg-white border border-blue-600 text-blue-600 px-4 py-2 rounded-xl font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Xem toàn bộ sản phẩm <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-      </main>
-    </div>
+      )}
+
+      <div className="mt-8">
+        <ProductFilter />
+      </div>
+
+      {/* LOGIC HIỂN THỊ */}
+      {isFiltering ? (
+        /* ================= GIAO DIỆN KẾT QUẢ TÌM KIẾM ================= */
+        <>
+          <div className="max-w-7xl mx-auto mb-6">
+            <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
+              {viewAll ? "Tất cả sản phẩm" : "Kết quả tìm kiếm"}: <span className="text-blue-600">{filteredProducts.length}</span> sản phẩm
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            {filteredProducts.length === 0 ? (
+              <p className="text-center col-span-full text-xl text-gray-500 py-10">Không tìm thấy sản phẩm nào.</p>
+            ) : (
+              filteredProducts.map((p) => <ProductCard key={p._id} product={p} />)
+            )}
+          </div>
+        </>
+      ) : (
+        /* ================= GIAO DIỆN DASHBOARD MẶC ĐỊNH ================= */
+        <div className="max-w-7xl mx-auto flex flex-col gap-16 pb-12 mt-10">
+          
+          {/* KHU VỰC SẢN PHẨM NỔI BẬT */}
+          <section>
+            <div className="flex items-center gap-3 mb-6 border-b-2 border-red-500 pb-2 inline-flex">
+              <Flame className="w-8 h-8 text-red-500 animate-pulse" />
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Sản Phẩm Nổi Bật</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {featuredProducts.map((p) => <ProductCard key={p._id} product={p} />)}
+            </div>
+          </section>
+
+          {/* KHU VỰC MỚI LÊN KỆ */}
+          <section>
+            <div className="flex items-center gap-3 mb-6 border-b-2 border-blue-500 pb-2 inline-flex">
+              <Sparkles className="w-8 h-8 text-blue-500" />
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Mới Lên Kệ</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {newProducts.map((p) => <ProductCard key={p._id} product={p} />)}
+            </div>
+          </section>
+
+        </div>
+      )}
+    </main>
   );
 }
