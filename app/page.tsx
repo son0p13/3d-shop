@@ -7,17 +7,12 @@ import ProductCard from '@/components/ProductCard';
 import HeroBanner from '@/components/HeroBanner';
 import Link from 'next/link';
 
-// Hàm chuẩn hóa dữ liệu từ MongoDB để truyền vào Client Component
 const formatProduct = (product: any) => ({
   ...product,
   _id: product._id.toString(),
   createdAt: product.createdAt ? product.createdAt.toString() : null,
   updatedAt: product.updatedAt ? product.updatedAt.toString() : null,
 });
-
-// ==========================================================
-// 1. LẤY DỮ LIỆU KHI KHÁCH ĐANG LỌC/TÌM KIẾM
-// ==========================================================
 async function getFilteredProducts(keyword: string, category: string, price: string) {
   await dbConnect();
   const filter: any = {};
@@ -42,9 +37,6 @@ async function getFilteredProducts(keyword: string, category: string, price: str
   return products.map(formatProduct);
 }
 
-// ==========================================================
-// 2. LẤY DỮ LIỆU MẶC ĐỊNH CHO TRANG CHỦ
-// ==========================================================
 async function getDashboardProducts() {
   await dbConnect();
   const newProducts = await Product.find({}).sort({ createdAt: -1 }).limit(8).lean();
@@ -64,17 +56,11 @@ export default async function Home({ searchParams }: Props) {
   const keyword = (typeof params.search === 'string' ? params.search : '') || '';
   const category = (typeof params.category === 'string' ? params.category : '') || '';
   const price = (typeof params.price === 'string' ? params.price : '') || '';
-  
-  // 👉 PHẦN THÊM MỚI: Nhận diện lệnh "Xem tất cả"
   const viewAll = params.view === 'all';
-  
-  // Cập nhật isFiltering bao gồm cả trường hợp xem tất cả
   const isFiltering = keyword || (category && category !== 'Tất cả') || price || viewAll;
-
   let filteredProducts: any[] = [];
   let newProducts: any[] = [];
   let featuredProducts: any[] = [];
-
   if (isFiltering) {
     filteredProducts = await getFilteredProducts(keyword, category, price);
   } else {
@@ -86,15 +72,11 @@ export default async function Home({ searchParams }: Props) {
   return (
     <main className="min-h-screen p-4 sm:p-8 bg-gray-50">
       
-      {/* THANH TÌM KIẾM & BỘ LỌC */}
       <div className="max-w-7xl mx-auto mb-8 flex flex-col items-center gap-6">
         <h1 className="text-4xl font-extrabold text-blue-600">Mixi3Ds</h1>
         <SearchBar />
       </div>
-
-      {/* banner */}
       {!isFiltering && <HeroBanner />}
-      
       {!isFiltering && (
         <div className="max-w-7xl mx-auto mt-6 flex justify-end">
           <Link 
@@ -109,10 +91,7 @@ export default async function Home({ searchParams }: Props) {
       <div className="mt-8">
         <ProductFilter />
       </div>
-
-      {/* LOGIC HIỂN THỊ */}
       {isFiltering ? (
-        /* ================= GIAO DIỆN KẾT QUẢ TÌM KIẾM ================= */
         <>
           <div className="max-w-7xl mx-auto mb-6">
             <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
@@ -128,11 +107,8 @@ export default async function Home({ searchParams }: Props) {
           </div>
         </>
       ) : (
-        /* ================= GIAO DIỆN DASHBOARD MẶC ĐỊNH ================= */
         <div className="max-w-7xl mx-auto flex flex-col gap-16 pb-12 mt-10">
-          
-          {/* KHU VỰC SẢN PHẨM NỔI BẬT */}
-          <section>
+                    <section>
             <div className="flex items-center gap-3 mb-6 border-b-2 border-red-500 pb-2 inline-flex">
               <Flame className="w-8 h-8 text-red-500 animate-pulse" />
               <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Sản Phẩm Nổi Bật</h2>
@@ -141,8 +117,6 @@ export default async function Home({ searchParams }: Props) {
               {featuredProducts.map((p) => <ProductCard key={p._id} product={p} />)}
             </div>
           </section>
-
-          {/* KHU VỰC MỚI LÊN KỆ */}
           <section>
             <div className="flex items-center gap-3 mb-6 border-b-2 border-blue-500 pb-2 inline-flex">
               <Sparkles className="w-8 h-8 text-blue-500" />

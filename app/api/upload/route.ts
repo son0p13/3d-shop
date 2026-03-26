@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const imageUrl = `/uploads/${filename}`;
     return NextResponse.json({ success: true, imageUrl });
   } catch (error) {
-    console.error("❌ LỖI NGHIÊM TRỌNG KHI TẢI ẢNH:", error);
+    console.error(" LỖI NGHIÊM TRỌNG KHI TẢI ẢNH:", error);
     return NextResponse.json({ success: false, message: 'Lỗi máy chủ' }, { status: 500 });
   }
 }

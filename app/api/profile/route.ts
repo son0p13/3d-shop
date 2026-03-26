@@ -4,7 +4,6 @@ import UserProfile from '@/models/UserProfile';
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
-// 1. LẤY HỒ SƠ
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +18,6 @@ export async function GET() {
   }
 }
 
-// 2. CẬP NHẬT HỒ SƠ
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -28,7 +26,6 @@ export async function PUT(req: Request) {
     await dbConnect();
     const body = await req.json();
 
-    // Dùng upsert: Nếu có rồi thì Cập nhật, chưa có thì Tạo mới
     const updatedProfile = await UserProfile.findOneAndUpdate(
       { email: session.user.email },
       { 

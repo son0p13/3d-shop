@@ -1,9 +1,7 @@
-// app/api/products/[id]/route.ts
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
 
-// 1. LẤY THÔNG TIN 1 SẢN PHẨM (Để điền sẵn vào Form)
 export async function GET(req: Request, { params }: { params: any }) {
   try {
     await dbConnect();
@@ -17,7 +15,6 @@ export async function GET(req: Request, { params }: { params: any }) {
   }
 }
 
-// 2. CẬP NHẬT SẢN PHẨM (Khi Admin bấm Lưu)
 export async function PUT(req: Request, { params }: { params: any }) {
   try {
     await dbConnect();
@@ -33,7 +30,6 @@ export async function PUT(req: Request, { params }: { params: any }) {
   }
 }
 
-// 3. XÓA SẢN PHẨM (Giữ nguyên như em đã làm)
 export async function DELETE(req: Request, { params }: { params: any }) {
   try {
     await dbConnect();

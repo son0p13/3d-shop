@@ -8,9 +8,9 @@ const ProductSchema = new mongoose.Schema({
   modelUrl: { type: String, required: false }, 
   
   printOptions: {
-    materials: [String], // Ví dụ: ['PLA', 'ABS', 'Resin']
-    colors: [String],    // Ví dụ: ['Đỏ', 'Đen', 'Trắng']
-    sizes: [String]      // Ví dụ: ['Nhỏ (5cm)', 'Vừa (10cm)', 'Lớn (20cm)']
+    materials: [String], 
+    colors: [String],   
+    sizes: [String]     
   }
 }, { timestamps: true });
 

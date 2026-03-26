@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { User, Mail, Lock, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function RegisterPage() {
-  const router = useRouter(); // Dùng để chuyển trang sau khi đăng ký thành công
+  const router = useRouter(); 
   
   const [formData, setFormData] = useState({
     name: '',
@@ -15,7 +15,7 @@ export default function RegisterPage() {
   });
 
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [message, setMessage] = useState(''); // Chứa câu thông báo lỗi hoặc thành công
+  const [message, setMessage] = useState(''); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +35,6 @@ export default function RegisterPage() {
         setStatus('success');
         setMessage('Đăng ký thành công! Đang chuyển hướng...');
         
-        // Đợi 2 giây cho người dùng đọc thông báo rồi chuyển sang trang Đăng nhập
         setTimeout(() => {
           router.push('/login');
         }, 2000);
@@ -53,13 +52,11 @@ export default function RegisterPage() {
     <main className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
         
-        {/* Tiêu đề */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-extrabold text-gray-900">Tạo tài khoản mới</h2>
           <p className="text-gray-500 mt-2">Tham gia Xưởng In 3D ngay hôm nay</p>
         </div>
 
-        {/* Thông báo Lỗi / Thành công */}
         {message && (
           <div className={`p-4 rounded-xl mb-6 flex items-center gap-3 ${
             status === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
@@ -69,13 +66,11 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Form nhập liệu */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          
-          {/* Nhập Tên */}
-          <div>
+                    <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Họ và Tên</label>
             <div className="relative">
+              
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-400" />
               </div>
@@ -89,8 +84,6 @@ export default function RegisterPage() {
               />
             </div>
           </div>
-
-          {/* Nhập Email */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Địa chỉ Email</label>
             <div className="relative">
@@ -107,8 +100,6 @@ export default function RegisterPage() {
               />
             </div>
           </div>
-
-          {/* Nhập Mật khẩu */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Mật khẩu</label>
             <div className="relative">
@@ -126,8 +117,6 @@ export default function RegisterPage() {
               />
             </div>
           </div>
-
-          {/* Nút Đăng ký */}
           <button
             type="submit"
             disabled={status === 'loading' || status === 'success'}
@@ -138,7 +127,6 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        {/* Chuyển sang trang đăng nhập */}
         <div className="mt-8 text-center text-sm text-gray-600 border-t border-gray-100 pt-6">
           Đã có tài khoản?{' '}
           <Link href="/login" className="font-bold text-blue-600 hover:text-blue-700 transition">

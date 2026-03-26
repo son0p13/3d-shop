@@ -3,17 +3,12 @@ import Product from '@/models/Product';
 import ModelViewer from '@/components/ModelViewer';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '@/components/AddToCartButton';
-// 1. Khai báo params là một hộp quà Promise (Luật mới của Next.js 15+)
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  
-  // 2. Dùng chữ await để "mở hộp" lấy ID thực sự ra
   const resolvedParams = await params;
   const productId = resolvedParams.id;
-
-  // 3. Kết nối Database và tìm sản phẩm theo ID chuẩn xác
   await dbConnect();
   const product = await Product.findById(productId).lean();
-
   if (!product) {
     return notFound();
   }
@@ -21,8 +16,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 min-h-screen">
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col md:flex-row">
-        
-
         <div className="w-full md:w-1/2 bg-gray-50 flex items-center justify-center min-h-[400px] border-b md:border-b-0 md:border-r border-gray-100 p-8">
           {product.modelUrl && product.modelUrl.trim() !== "" ? (
             <div className="w-full h-full max-h-[500px]">
@@ -37,7 +30,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
 
-        {/* NỬA BÊN PHẢI: Thông tin chốt đơn */}
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-2">
             <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
@@ -59,7 +51,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </p>
 
          <AddToCartButton product={{
-            _id: product._id.toString(), // Phải đổi ID sang chuỗi để truyền cho Client
+            _id: product._id.toString(),
             name: product.name,
             basePrice: product.basePrice,
             image: product.image

@@ -15,6 +15,14 @@ export async function POST(request: Request) {
     if (existingUser) {
       return NextResponse.json({ message: 'Email này đã được sử dụng!' }, { status: 400 });
     }
+    const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
+
+if (!nameRegex.test(name)) {
+  return NextResponse.json(
+    { success: false, message: "Tên chỉ được chứa chữ cái và khoảng trắng, không dùng số hay kí tự đặc biệt!" },
+    { status: 400 }
+  );
+}
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -26,7 +34,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Đăng ký tài khoản thành công!' }, { status: 201 });
 
   } catch (error: any) {
-    console.log("🔥 LỖI ĐĂNG KÝ:", error.message);
+    console.log(" LỖI ĐĂNG KÝ:", error.message);
     return NextResponse.json({ message: 'Có lỗi xảy ra khi đăng ký' }, { status: 500 });
   }
 }

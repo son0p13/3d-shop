@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const OrderSchema = new mongoose.Schema({
-  // 👉 THÊM TRƯỜNG NÀY ĐỂ ĐỊNH DANH TÀI KHOẢN (Tách biệt với người nhận hàng)
   userEmail: { type: String, required: true }, 
 
   customerInfo: {

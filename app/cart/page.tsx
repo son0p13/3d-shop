@@ -30,12 +30,10 @@ export default function CartPage() {
         
         <div className="flex flex-col lg:flex-row gap-10">
           
-          {/* --- CỘT TRÁI: DANH SÁCH SẢN PHẨM --- */}
           <div className="lg:w-2/3 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <ul className="divide-y divide-gray-200">
               {cart.map((item) => (
                 <li key={item._id} className="py-6 flex flex-col sm:flex-row gap-6">
-                  {/* Thay vì load lại 3D nặng máy, ta dùng Icon hộp làm ảnh đại diện */}
                   <div className="w-24 h-24 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
                     <ShoppingBag className="w-8 h-8 text-blue-300" />
                   </div>
@@ -51,9 +49,7 @@ export default function CartPage() {
                         {(item.price * item.quantity).toLocaleString('vi-VN')} đ
                       </p>
                     </div>
-                    
-                    {/* Hàng nút bấm chức năng */}
-                    <div className="flex items-center justify-between mt-6">
+                                        <div className="flex items-center justify-between mt-6">
                       <div className="flex items-center border border-gray-200 rounded-lg">
                         <button onClick={() => updateQuantity(item._id, item.quantity - 1)} className="p-2 text-gray-500 hover:text-blue-600 transition bg-gray-50 rounded-l-lg">
                           <Minus className="w-4 h-4" />

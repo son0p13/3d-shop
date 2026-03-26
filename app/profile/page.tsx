@@ -8,13 +8,9 @@ import { User, Phone, MapPin, Save, ShieldCheck, Pencil, X } from 'lucide-react'
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
-  // 👉 THÊM CÔNG TẮC CHUYỂN ĐỔI CHẾ ĐỘ
   const [isEditing, setIsEditing] = useState(false); 
-
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -74,7 +70,7 @@ export default function ProfilePage() {
       const data = await res.json();
       if (data.success) {
         alert('Cập nhật hồ sơ thành công!');
-        setIsEditing(false); // 👉 Lưu xong thì tự động đóng form lại
+        setIsEditing(false); 
       } else {
         alert('Lỗi: ' + data.message);
       }
@@ -104,7 +100,6 @@ export default function ProfilePage() {
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10">
-          {/* Email (Luôn hiển thị) */}
           <div className="mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-4">
             <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
               {session?.user?.image ? <img src={session.user.image} alt="Avatar" /> : <User className="text-gray-500"/>}
@@ -115,7 +110,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* CHẾ ĐỘ 1: CHỈ XEM THÔNG TIN (Khi isEditing là false) */}
           {!isEditing ? (
             <div className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -151,9 +145,7 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            
-            /* CHẾ ĐỘ 2: FORM NHẬP LIỆU (Khi isEditing là true) */
-            <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
+                        <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
               <div className="bg-blue-50 text-blue-700 p-4 rounded-xl text-sm font-semibold mb-6 flex items-center gap-2">
                 <Pencil className="w-4 h-4"/> Bạn đang ở chế độ chỉnh sửa hồ sơ.
               </div>

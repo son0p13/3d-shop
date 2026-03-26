@@ -4,15 +4,13 @@ import { useState, useEffect } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { ShoppingCart, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { createPortal } from 'react-dom'; // 👈 1. Import công cụ dịch chuyển Portal
+import { createPortal } from 'react-dom'; 
 
 export default function AddToCartButton({ product }: { product: any }) {
   const addToCart = useCartStore((state) => state.addToCart);
   const [showModal, setShowModal] = useState(false);
-  const [mounted, setMounted] = useState(false); // 👈 2. Biến kiểm tra trình duyệt đã sẵn sàng chưa
+  const [mounted, setMounted] = useState(false); 
   const router = useRouter();
-
-  // Đảm bảo chỉ dùng Portal khi web đã tải xong trên trình duyệt
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -58,7 +56,6 @@ export default function AddToCartButton({ product }: { product: any }) {
         <span className="text-sm">Thêm ngay</span>
       </button>
 
-      {/* 👈 3. Dùng createPortal để bắn hộp thoại thẳng ra thẻ body */}
       {showModal && mounted && createPortal(
         <div 
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -98,7 +95,7 @@ export default function AddToCartButton({ product }: { product: any }) {
             </div>
           </div>
         </div>,
-        document.body // <--- Mục tiêu dịch chuyển: ném thẳng vào thẻ body của trang
+        document.body 
       )}
     </>
   );

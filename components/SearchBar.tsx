@@ -3,12 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
-
-// CHÚ Ý CHỖ NÀY: Phải có chữ "export default"
 export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
   const router = useRouter();
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (keyword.trim()) {

@@ -1,6 +1,4 @@
-// app/admin/products/[id]/edit/page.tsx
 'use client';
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
@@ -9,14 +7,10 @@ import { ArrowLeft, Save, Image as ImageIcon, Package } from 'lucide-react';
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  // Giải nén params theo chuẩn Next.js 15
   const resolvedParams = use(params);
   const productId = resolvedParams.id;
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
-  // State chứa dữ liệu form
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -25,7 +19,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     description: ''
   });
 
-  // Tải dữ liệu cũ của sản phẩm khi vừa vào trang
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -68,14 +61,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          basePrice: Number(formData.basePrice) // Đảm bảo giá tiền là dạng số
+          basePrice: Number(formData.basePrice) 
         })
       });
 
       const data = await res.json();
       if (data.success) {
         alert('Cập nhật sản phẩm thành công!');
-        router.push('/admin/products'); // Đá về trang danh sách
+        router.push('/admin/products');
       } else {
         alert('Lỗi: ' + data.message);
       }
@@ -105,13 +98,10 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           <form onSubmit={handleSubmit} className="space-y-6">
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Tên sản phẩm */}
               <div className="md:col-span-2">
                 <label className="block text-sm font-bold text-gray-700 mb-2">Tên mô hình</label>
                 <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
-
-              {/* Danh mục */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Danh mục</label>
                 <select name="category" value={formData.category} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -122,15 +112,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                   <option value="Khác">Khác</option>
                 </select>
               </div>
-
-              {/* Giá tiền */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Giá bán (VNĐ)</label>
                 <input required type="number" name="basePrice" value={formData.basePrice} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none" />
               </div>
             </div>
-
-            {/* Link ảnh */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><ImageIcon className="w-4 h-4"/> Đường dẫn ảnh (URL)</label>
               <input required type="text" name="image" value={formData.image} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="https://..." />
@@ -140,8 +126,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 </div>
               )}
             </div>
-
-            {/* Nút lưu */}
             <div className="pt-4 border-t border-gray-100 flex justify-end">
               <button disabled={isSaving} type="submit" className="bg-blue-600 text-white font-bold rounded-xl px-8 py-3 hover:bg-blue-700 transition flex items-center gap-2 shadow-lg disabled:opacity-50">
                 {isSaving ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <><Save className="w-5 h-5"/> Lưu thay đổi</>}

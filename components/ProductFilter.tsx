@@ -1,12 +1,10 @@
-// components/ProductFilter.tsx
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
-// ⚠️ PHẢI VIẾT ĐÚNG TỪNG CHỮ NHƯ TRONG DATABASE
 const CATEGORIES = [
   { label: 'Tất cả danh mục', value: 'Tất cả' },
-  { label: 'Mô hình Game', value: 'Mô hình Game' }, // Trong DB của em là cái này
+  { label: 'Mô hình Game', value: 'Mô hình Game' },
   { label: 'Đồ trang trí', value: 'Đồ trang trí' },
   { label: 'Linh kiện 3D', value: 'Linh kiện 3D' },
   { label: 'Khác', value: 'Khác' },
@@ -35,7 +33,6 @@ export default function ProductFilter() {
 
   return (
     <div className="flex flex-col md:flex-row gap-4 w-full max-w-4xl mx-auto">
-      {/* Lọc theo Danh mục */}
       <select 
         onChange={(e) => handleFilterChange('category', e.target.value)}
         value={searchParams.get('category') || 'Tất cả'}
@@ -46,7 +43,6 @@ export default function ProductFilter() {
         ))}
       </select>
 
-      {/* Lọc theo Giá */}
       <select 
         onChange={(e) => handleFilterChange('price', e.target.value)}
         value={searchParams.get('price') || ''}

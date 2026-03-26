@@ -8,7 +8,6 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // 👉 THÊM STATE ĐỂ QUẢN LÝ POPUP CHI TIẾT
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
   useEffect(() => {
@@ -44,9 +43,7 @@ export default function AdminOrdersPage() {
       const data = await res.json();
       if (data.success) {
         setOrders(orders.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
-        
-        // Nếu đang mở popup của đúng đơn hàng này, cập nhật trạng thái trong popup luôn
-        if (selectedOrder && selectedOrder._id === orderId) {
+                if (selectedOrder && selectedOrder._id === orderId) {
           setSelectedOrder({ ...selectedOrder, status: newStatus });
         }
         alert('Cập nhật trạng thái thành công!');
@@ -73,7 +70,6 @@ export default function AdminOrdersPage() {
     <main className="p-4 sm:p-8 bg-gray-50 min-h-screen relative">
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="p-2 bg-gray-50 rounded-full hover:bg-gray-200 transition">
@@ -90,7 +86,6 @@ export default function AdminOrdersPage() {
           </div>
         </div>
 
-        {/* BẢNG ĐƠN HÀNG */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -124,7 +119,6 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="p-5">
                       <div className="flex items-center justify-center gap-2">
-                        {/* 👉 NÚT XEM CHI TIẾT */}
                         <button 
                           onClick={() => setSelectedOrder(order)}
                          className="px-4 py-2 bg-blue-50 text-blue-600 font-bold text-sm rounded-xl hover:bg-blue-600 hover:text-white transition shadow-sm whitespace-nowrap"
@@ -133,7 +127,6 @@ export default function AdminOrdersPage() {
                           Chi tiết
                         </button>
                         
-                        {/* 👉 DROPDOWN DUYỆT ĐƠN */}
                         <select 
                           value={order.status}
                           onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
@@ -154,14 +147,10 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-      {/* =========================================================
-          POPUP HIỂN THỊ CHI TIẾT ĐƠN HÀNG (Chỉ hiện khi có selectedOrder)
-          ========================================================= */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
             
-            {/* Header của Popup */}
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-3xl">
               <div>
                 <h3 className="text-xl font-black text-gray-900">Chi tiết đơn hàng #{selectedOrder._id.slice(-6).toUpperCase()}</h3>
@@ -175,10 +164,8 @@ export default function AdminOrdersPage() {
               </button>
             </div>
 
-            {/* Nội dung chi tiết (Có thể cuộn) */}
             <div className="p-6 overflow-y-auto flex-1 bg-white space-y-8">
               
-              {/* Thông tin giao hàng */}
               <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
                 <h4 className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm flex items-center gap-2">
                   <MapPin className="text-blue-600 w-5 h-5"/> Thông tin giao hàng
@@ -208,7 +195,6 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
 
-              {/* Danh sách sản phẩm trong đơn */}
               <div>
                 <h4 className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm flex items-center gap-2">
                   <Package className="text-blue-600 w-5 h-5"/> Sản phẩm đã đặt
@@ -234,7 +220,6 @@ export default function AdminOrdersPage() {
 
             </div>
 
-            {/* Footer của Popup (Tổng tiền) */}
             <div className="px-6 py-5 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex justify-between items-center">
               <span className="font-bold text-gray-500">Tổng thanh toán:</span>
               <span className="text-2xl font-black text-blue-600">{selectedOrder.totalAmount?.toLocaleString('vi-VN')} đ</span>

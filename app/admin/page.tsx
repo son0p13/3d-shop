@@ -40,14 +40,12 @@ export default function AdminDashboard() {
     <main className="p-4 sm:p-8 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         
-        {/* HEADER & NÚT BẤM */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-black text-gray-900">Tổng quan cửa hàng</h1>
             <p className="text-gray-500 mt-1">Xin chào Sếp! Đây là tình hình kinh doanh hôm nay.</p>
           </div>
           <div className="flex items-center gap-3">
-            {/* Nút Quản lý sản phẩm (Đã thêm) */}
             <Link href="/admin/products" className="bg-white text-gray-700 border border-gray-200 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-50 transition shadow-sm">
                Quản lý kho
             </Link>
@@ -60,9 +58,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* 3 THẺ THỐNG KÊ (Dynamic) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Thẻ Doanh Thu */}
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-6">
             <div className="w-16 h-16 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center">
               <DollarSign className="w-8 h-8" />
@@ -73,7 +69,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Thẻ Tổng Đơn */}
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-6">
             <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center">
               <ShoppingBag className="w-8 h-8" />
@@ -84,7 +79,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Thẻ Chờ Xác Nhận */}
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-6">
             <div className="w-16 h-16 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center">
               <Clock className="w-8 h-8" />
@@ -96,7 +90,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* BẢNG ĐƠN HÀNG MỚI NHẤT (Dynamic) */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
           <div className="flex justify-between items-center mb-6 border-b border-gray-50 pb-4">
             <h2 className="text-xl font-extrabold text-gray-900">Đơn hàng mới nhất</h2>

@@ -5,15 +5,12 @@ import { useCartStore } from '@/store/cartStore';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MapPin, Phone, User, CreditCard, ArrowLeft, Truck, CheckCircle2, QrCode, Banknote, ChevronLeft } from 'lucide-react';
-import { useSession } from 'next-auth/react'; // Đã có import
+import { useSession } from 'next-auth/react'; 
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, clearCart } = useCartStore();
-  
-  // 👉 GỌI SESSION ĐỂ LẤY EMAIL NGƯỜI DÙNG
   const { data: session } = useSession(); 
-
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
@@ -50,11 +47,10 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
     
     try {
-      // 👉 ĐÓNG GÓI LẠI ĐƠN HÀNG: Thêm email vào customerInfo
       const orderPayload = {
         customerInfo: {
-          ...formData, // Lấy toàn bộ Tên, SĐT, Địa chỉ, Ghi chú
-          email: session?.user?.email || "", // Tự động chèn email vào đây
+          ...formData,
+          email: session?.user?.email || "",
         },
         items: cart,
         totalAmount: total,

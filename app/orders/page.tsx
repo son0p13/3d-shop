@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Package, Clock, ArrowLeft, LogIn } from 'lucide-react';
@@ -99,8 +98,6 @@ export default function OrderHistoryPage() {
           <div className="space-y-6">
             {orders.map((order) => (
               <div key={order._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-                
-                {/* Header của từng đơn hàng */}
                 <div className="bg-gray-50/50 px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div className="flex items-center gap-3">
                     <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 uppercase">
@@ -114,8 +111,6 @@ export default function OrderHistoryPage() {
                     Mã đơn: <span className="text-gray-900 font-bold uppercase">{order._id.slice(-6)}</span>
                   </div>
                 </div>
-
-                {/* Danh sách sản phẩm trong đơn */}
                 <div className="p-6">
                   <div className="space-y-4 mb-6">
                     {order.items.map((item: any, index: number) => (
@@ -133,8 +128,6 @@ export default function OrderHistoryPage() {
                   </div>
 
                   <hr className="border-gray-100 mb-4" />
-                  
-                  {/* Tổng kết tiền & Thông tin giao hàng */}
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                     <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl w-full md:w-auto">
                       <p><span className="font-semibold">Người nhận:</span> {order.customerInfo.fullName} ({order.customerInfo.phone})</p>

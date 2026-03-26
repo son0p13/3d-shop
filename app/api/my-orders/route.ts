@@ -6,9 +6,7 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
     const body = await req.json();
-    
-    // 👉 ĐẶT MÁY DÒ: Xem Backend nhận được gì từ giao diện
-    console.log("📦 THÔNG TIN KHÁCH HÀNG GỬI LÊN:", body.customerInfo);
+        console.log(" THÔNG TIN KHÁCH HÀNG GỬI LÊN:", body.customerInfo);
 
     const newOrder = await Order.create(body);
     return NextResponse.json({ success: true, order: newOrder }, { status: 201 });
@@ -18,4 +16,3 @@ export async function POST(req: Request) {
   }
 }
 
-// ... (Các hàm GET giữ nguyên)

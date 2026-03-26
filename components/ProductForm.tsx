@@ -6,11 +6,8 @@ import { useRouter } from 'next/navigation';
 export default function ProductForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  
-  // Tách riêng state để chứa file ảnh thật
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>('');
-  
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -18,7 +15,6 @@ export default function ProductForm() {
     modelUrl: ''
   });
 
-  // 📸 HÀM XỬ LÝ KHI CHỌN ẢNH TỪ MÁY
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -31,7 +27,6 @@ export default function ProductForm() {
     }
   };
 
-  // 🚀 HÀM GÓI HÀNG VÀ GỬI ĐI
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
@@ -46,11 +41,9 @@ export default function ProductForm() {
     submitData.append('basePrice', formData.basePrice);
     submitData.append('image', file); 
 
-    // 🎯 ĐIỂM TINH CHỈNH MỚI: Chỉ gửi modelUrl nếu người dùng có nhập nội dung
     if (formData.modelUrl.trim() !== '') {
       submitData.append('modelUrl', formData.modelUrl.trim());
     }
-
     try {
       const res = await fetch('/api/products', {
         method: 'POST',
@@ -58,16 +51,16 @@ export default function ProductForm() {
       });
 
       if (res.ok) {
-        alert('🎉 Đã thêm sản phẩm và tải ảnh lên thành công!');
+        alert(' Đã thêm sản phẩm thành công!');
         router.push('/');
         router.refresh();
       } else {
         const errorData = await res.json();
-        alert(`❌ Có lỗi xảy ra: ${errorData.message || 'Lưu sản phẩm thất bại.'}`);
+        alert(` Có lỗi xảy ra: ${errorData.message || 'Lưu sản phẩm thất bại.'}`);
       }
     } catch (error) {
       console.error(error);
-      alert('❌ Lỗi kết nối mạng.');
+      alert(' Lỗi kết nối mạng.');
     } finally {
       setLoading(false);
     }
@@ -93,13 +86,11 @@ export default function ProductForm() {
           className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: 150000" />
       </div>
 
-      {/* KHU VỰC TẢI ẢNH LÊN */}
       <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
         <label className="block text-sm font-bold text-blue-800 mb-2">📸 Tải Ảnh 2D Sản Phẩm (Bắt buộc)</label>
         <input required type="file" accept="image/*" onChange={handleImageChange}
           className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer transition" />
         
-        {/* Khung xem trước ảnh */}
         {preview && (
           <div className="mt-4">
             <p className="text-xs text-gray-500 mb-2 font-medium">Xem trước ảnh:</p>
