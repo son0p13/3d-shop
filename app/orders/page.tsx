@@ -2,16 +2,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Package, Clock, ArrowLeft, LogIn } from 'lucide-react';
-import { useSession } from 'next-auth/react'; // 
+import { useSession } from 'next-auth/react'; 
 import { useRouter } from 'next/navigation';
+
+// 👉 BƯỚC 1: IMPORT MẢNH GHÉP MODAL CHI TIẾT
+import OrderDetailsModal from '@/components/OrderDetailsModal';
 
 export default function OrderHistoryPage() {
   const router = useRouter();
-  
   const { data: session, status } = useSession(); 
 
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // 👉 BƯỚC 2: STATE LƯU ĐƠN HÀNG ĐANG CHỌN ĐỂ HIỂN THỊ
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -71,9 +76,8 @@ export default function OrderHistoryPage() {
     );
   }
 
-
   return (
-    <main className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
         
         <div className="flex items-center gap-4 mb-8">
@@ -128,17 +132,27 @@ export default function OrderHistoryPage() {
                   </div>
 
                   <hr className="border-gray-100 mb-4" />
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-xl w-full md:w-auto">
                       <p><span className="font-semibold">Người nhận:</span> {order.customerInfo.fullName} ({order.customerInfo.phone})</p>
                       <p className="mt-1"><span className="font-semibold">Giao tới:</span> {order.customerInfo.address}</p>
                       <p className="mt-1"><span className="font-semibold">Thanh toán:</span> {order.paymentMethod === 'cod' ? 'Tiền mặt (COD)' : 'Chuyển khoản QR'}</p>
                     </div>
-                    <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
-                      <span className="text-gray-600 font-medium">Thành tiền:</span>
-                      <span className="text-2xl font-extrabold text-blue-600">
-                        {order.totalAmount.toLocaleString('vi-VN')} đ
-                      </span>
+                    
+                    {/* 👉 BƯỚC 3: THÊM NÚT "XEM CHI TIẾT" Ở KHU VỰC TỔNG TIỀN */}
+                    <div className="flex flex-col gap-3 w-full md:w-auto mt-2 md:mt-0">
+                      <div className="flex items-center gap-3 justify-between md:justify-end">
+                        <span className="text-gray-600 font-medium">Thành tiền:</span>
+                        <span className="text-2xl font-extrabold text-blue-600">
+                          {order.totalAmount.toLocaleString('vi-VN')} đ
+                        </span>
+                      </div>
+                      <button 
+                        onClick={() => setSelectedOrder(order)}
+                        className="w-full md:w-auto px-5 py-2.5 bg-blue-50 text-blue-600 font-bold text-sm rounded-xl hover:bg-blue-600 hover:text-white transition shadow-sm"
+                      >
+                        Xem chi tiết đơn hàng
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -149,6 +163,15 @@ export default function OrderHistoryPage() {
         )}
 
       </div>
+
+      {/* 👉 BƯỚC 4: THẢ MẢNH GHÉP Ở CUỐI TRANG */}
+      {selectedOrder && (
+        <OrderDetailsModal 
+          order={selectedOrder} 
+          onClose={() => setSelectedOrder(null)} 
+        />
+      )}
+
     </main>
   );
 }

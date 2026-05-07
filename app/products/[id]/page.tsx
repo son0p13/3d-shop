@@ -4,17 +4,23 @@ import ModelViewer from '@/components/ModelViewer';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '@/components/AddToCartButton';
 
+// 👉 1. IMPORT COMPONENT ĐÁNH GIÁ
+import ProductReviews from '@/components/ProductReviews';
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const productId = resolvedParams.id;
   await dbConnect();
   const product = await Product.findById(productId).lean();
+  
   if (!product) {
     return notFound();
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 min-h-screen">
+      
+      {/* CHI TIẾT SẢN PHẨM */}
       <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col md:flex-row">
         <div className="w-full md:w-1/2 bg-gray-50 flex items-center justify-center min-h-[400px] border-b md:border-b-0 md:border-r border-gray-100 p-8">
           {product.modelUrl && product.modelUrl.trim() !== "" ? (
@@ -42,7 +48,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </h1>
           
           <div className="text-4xl font-black text-blue-600 mb-6">
-
             {product.basePrice?.toLocaleString('vi-VN')} đ
           </div>
           
@@ -62,8 +67,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <span className="flex items-center gap-1"> Đóng gói chống sốc</span>
           </div>
         </div>
-
       </div>
+
+      {/* 👉 KHU VỰC 2: PHẦN BÌNH LUẬN & ĐÁNH GIÁ (Nằm ngay dưới thông tin sản phẩm) */}
+      <ProductReviews productId={productId} />
+
     </div>
   );
 }

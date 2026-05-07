@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Package, ArrowLeft, CheckCircle, Clock, Truck, XCircle, Search, Eye, X, MapPin, User, Phone } from 'lucide-react';
+import { Package, ArrowLeft, CheckCircle, Clock, Truck, XCircle } from 'lucide-react';
+
+// 👉 BƯỚC A: IMPORT MẢNH GHÉP VÀO ĐÂY
+import OrderDetailsModal from '@/components/OrderDetailsModal';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
+  // 👉 BƯỚC B: STATE LƯU ĐƠN HÀNG ĐANG CHỌN (ĐÃ CÓ SẴN)
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
   useEffect(() => {
@@ -43,7 +47,7 @@ export default function AdminOrdersPage() {
       const data = await res.json();
       if (data.success) {
         setOrders(orders.map(o => o._id === orderId ? { ...o, status: newStatus } : o));
-                if (selectedOrder && selectedOrder._id === orderId) {
+        if (selectedOrder && selectedOrder._id === orderId) {
           setSelectedOrder({ ...selectedOrder, status: newStatus });
         }
         alert('Cập nhật trạng thái thành công!');
@@ -119,9 +123,10 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="p-5">
                       <div className="flex items-center justify-center gap-2">
+                        {/* 👉 BƯỚC C: NÚT GỌI MẢNH GHÉP ĐÃ CÓ SẴN TRONG CODE CỦA SẾP */}
                         <button 
                           onClick={() => setSelectedOrder(order)}
-                         className="px-4 py-2 bg-blue-50 text-blue-600 font-bold text-sm rounded-xl hover:bg-blue-600 hover:text-white transition shadow-sm whitespace-nowrap"
+                          className="px-4 py-2 bg-blue-50 text-blue-600 font-bold text-sm rounded-xl hover:bg-blue-600 hover:text-white transition shadow-sm whitespace-nowrap"
                           title="Xem chi tiết đơn hàng"
                         >
                           Chi tiết
@@ -147,86 +152,12 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
+      {/* 👉 BƯỚC D: THẢ MẢNH GHÉP XUỐNG ĐÂY (Thay thế toàn bộ cụm Modal cũ) */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col animate-in zoom-in-95 duration-200">
-            
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-3xl">
-              <div>
-                <h3 className="text-xl font-black text-gray-900">Chi tiết đơn hàng #{selectedOrder._id.slice(-6).toUpperCase()}</h3>
-                <p className="text-sm text-gray-500 font-medium mt-1">Đặt lúc: {new Date(selectedOrder.createdAt).toLocaleString('vi-VN')}</p>
-              </div>
-              <button 
-                onClick={() => setSelectedOrder(null)} 
-                className="p-2 bg-white border border-gray-200 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50 transition shadow-sm"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6 overflow-y-auto flex-1 bg-white space-y-8">
-              
-              <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                <h4 className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm flex items-center gap-2">
-                  <MapPin className="text-blue-600 w-5 h-5"/> Thông tin giao hàng
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-xl shadow-sm"><User className="w-5 h-5 text-gray-500"/></div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-400">Người nhận</p>
-                      <p className="font-bold text-gray-900">{selectedOrder.customerInfo.fullName}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-xl shadow-sm"><Phone className="w-5 h-5 text-gray-500"/></div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-400">Số điện thoại</p>
-                      <p className="font-bold text-gray-900">{selectedOrder.customerInfo.phone}</p>
-                    </div>
-                  </div>
-                  <div className="md:col-span-2 flex items-start gap-3 mt-2">
-                    <div className="p-2 bg-white rounded-xl shadow-sm"><MapPin className="w-5 h-5 text-gray-500"/></div>
-                    <div>
-                      <p className="text-xs font-bold text-gray-400">Địa chỉ cụ thể</p>
-                      <p className="font-bold text-gray-900">{selectedOrder.customerInfo.address}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm flex items-center gap-2">
-                  <Package className="text-blue-600 w-5 h-5"/> Sản phẩm đã đặt
-                </h4>
-                <div className="space-y-4">
-                  {selectedOrder.items.map((item: any, idx: number) => (
-                    <div key={idx} className="flex items-center justify-between gap-4 p-4 border border-gray-100 rounded-2xl hover:bg-gray-50 transition">
-                      <div className="flex items-center gap-4">
-                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-xl border border-gray-200" />
-                        <div>
-                          <h5 className="font-bold text-gray-900 line-clamp-1">{item.name}</h5>
-                          <p className="text-sm text-gray-500">Đơn giá: {item.price.toLocaleString('vi-VN')} đ</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-bold text-gray-500">x {item.quantity}</p>
-                        <p className="font-black text-blue-600">{(item.price * item.quantity).toLocaleString('vi-VN')} đ</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            <div className="px-6 py-5 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex justify-between items-center">
-              <span className="font-bold text-gray-500">Tổng thanh toán:</span>
-              <span className="text-2xl font-black text-blue-600">{selectedOrder.totalAmount?.toLocaleString('vi-VN')} đ</span>
-            </div>
-
-          </div>
-        </div>
+        <OrderDetailsModal 
+          order={selectedOrder} 
+          onClose={() => setSelectedOrder(null)} 
+        />
       )}
 
     </main>
