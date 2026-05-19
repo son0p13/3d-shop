@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DollarSign, ShoppingBag, Clock, ArrowRight, Plus, Tag, LayoutDashboard } from 'lucide-react';
 import CouponManager from '@/components/CouponManager';
+import OrderDetailsModal from '@/components/OrderDetailsModal';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');

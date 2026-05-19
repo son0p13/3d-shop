@@ -309,7 +309,6 @@ export default function CouponManager() {
                          <p className="text-sm text-gray-500 text-center py-4">Không tìm thấy sản phẩm nào phù hợp.</p>
                       ) : (
                         Object.entries(groupedProducts).map(([category, prods]: [string, any]) => {
-                          // Kiểm tra xem tất cả sản phẩm trong danh mục này đã được chọn chưa
                           const isAllSelected = prods.length > 0 && prods.every((p: any) => formData.applicableProducts.includes(p._id));
                           
                           return (

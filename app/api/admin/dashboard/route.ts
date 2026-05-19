@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Order from '@/models/Order';
+import OrderDetailsModal from '@/components/OrderDetailsModal';
 
 export const dynamic = 'force-dynamic'; 
 
