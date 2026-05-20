@@ -154,7 +154,7 @@ export default function ProfilePage() {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Họ và tên người nhận</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><User className="h-5 w-5 text-gray-400" /></div>
-                  <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="VD: Hoàng Tuấn Sơn" className="pl-12 w-full bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none block p-3.5 shadow-sm" />
+                  <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} className="pl-12 w-full bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none block p-3.5 shadow-sm" />
                 </div>
               </div>
 

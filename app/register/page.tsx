@@ -123,12 +123,12 @@ export default function RegisterPage() {
           {/* LUÔN HIỂN THỊ CÁC Ô NÀY (Nhưng khóa lại ở bước 2 để khách không sửa lung tung) */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Họ và Tên</label>
-            <input type="text" name="name" required disabled={step === 2} value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50" placeholder="VD: Hoàng Tuấn Sơn" />
+            <input type="text" name="name" required disabled={step === 2} value={formData.name} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"  />
           </div>
 
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
-            <input type="email" name="email" required disabled={step === 2} value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50" placeholder="sondaica@gmail.com" />
+            <input type="email" name="email" required disabled={step === 2} value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition disabled:opacity-50"  />
           </div>
 
           <div>
@@ -148,7 +148,7 @@ export default function RegisterPage() {
             <div className="animate-fade-in-up mt-6 border-t pt-6">
               <label className="block text-sm font-black text-blue-600 mb-1">Mã xác thực OTP (6 số)</label>
               <p className="text-xs text-gray-500 mb-2">Vui lòng kiểm tra hòm thư chính và mục Thư rác (Spam).</p>
-              <input type="text" name="otp" required maxLength={6} value={formData.otp} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-blue-50 border border-blue-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-center font-black tracking-widest text-xl" placeholder="123456" />
+              <input type="text" name="otp" required maxLength={6} value={formData.otp} onChange={handleChange} className="w-full px-4 py-3 rounded-xl bg-blue-50 border border-blue-200 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition text-center font-black tracking-widest text-xl"  />
             </div>
           )}
 
@@ -161,7 +161,7 @@ export default function RegisterPage() {
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : null}
-            {step === 1 ? "Nhận mã xác thực" : "Xác nhận Đăng ký"}
+            {step === 1 ? "Đăng kí" : "Xác nhận Đăng ký"}
           </button>
         </form>
 

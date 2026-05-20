@@ -9,40 +9,44 @@ export async function POST(req: Request) {
     const { name, email } = await req.json();
     await dbConnect();
 
-    // 1. Kiểm duyệt tên khắt khe (Chỉ cho phép chữ cái và dấu cách)
     const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/;
     if (!nameRegex.test(name)) {
       return NextResponse.json({ success: false, message: 'Tên chỉ được chứa chữ cái, không dùng số hay kí tự đặc biệt!' }, { status: 400 });
     }
 
-    // 2. Kiểm tra email đã có người dùng chưa
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ success: false, message: 'Email này đã được đăng ký!' }, { status: 400 });
     }
 
-    // 3. Tạo mã OTP 6 số ngẫu nhiên
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // 4. Lưu mã vào Két sắt (Nếu email này đã xin mã trước đó thì ghi đè mã mới)
     await Otp.findOneAndUpdate(
       { email }, 
       { otp: otpCode, createdAt: Date.now() }, 
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
 
-    // 5. Triệu hồi "Bưu tá" Nodemailer
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp-relay.brevo.com', 
+      port: 465, 
+      secure: true, 
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_PASS,
       }
     });
 
-    // 6. Gửi thư cho khách
+    try {
+      await transporter.verify();
+      console.log("✅ KẾT NỐI BREVO THÀNH CÔNG! Đang chuẩn bị gửi...");
+    } catch (verifyError) {
+      console.error("❌ LỖI TÀI KHOẢN BREVO:", verifyError);
+      return NextResponse.json({ success: false, message: 'Lỗi đăng nhập Brevo (Check Terminal)' }, { status: 500 });
+    }
+
     await transporter.sendMail({
-      from: `"Mixi3Ds Store" <${process.env.EMAIL_USER}>`,
+      from: `"Mixi3Ds Store" <mixi3ds@gmail.com>`,
       to: email,
       subject: 'Mã xác thực đăng ký tài khoản Mixi3Ds',
       html: `
@@ -55,6 +59,7 @@ export async function POST(req: Request) {
       `
     });
 
+    console.log(`✅ ĐÃ GỬI OTP TỚI: ${email}`);
     return NextResponse.json({ success: true, message: 'Mã xác thực đã được gửi đến email của bạn!' });
 
   } catch (error: any) {
