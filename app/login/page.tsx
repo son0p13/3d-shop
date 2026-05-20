@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
@@ -54,9 +55,12 @@ export default function LoginPage() {
                 <Mail className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                required type="email" placeholder="son@example.com"
+                required type="email" placeholder="youremail@example.com"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  setStatus('idle'); 
+                }}
                 className="w-full pl-11 pr-5 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white"
               />
             </div>
@@ -71,7 +75,10 @@ export default function LoginPage() {
               <input
                 required type="password" placeholder="••••••••"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value });
+                  setStatus('idle'); 
+                }}
                 className="w-full pl-11 pr-5 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white"
               />
             </div>
@@ -85,6 +92,16 @@ export default function LoginPage() {
             {status === 'loading' ? 'Đang kiểm tra...' : 'Đăng Nhập'}
             {status !== 'loading' && <ArrowRight className="w-5 h-5" />}
           </button>
+
+          <div className="flex justify-center mt-3">
+            <Link 
+              href="/forgot-password" 
+              className="text-sm font-bold text-blue-600 hover:text-blue-800 hover:underline transition"
+            >
+              Bạn quên mật khẩu?
+            </Link>
+          </div>
+
         </form>
 
         <div className="mt-8 text-center text-sm text-gray-600 border-t border-gray-100 pt-6">

@@ -11,6 +11,10 @@ export default function NewProductPage() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  
+  // 👉 ĐÃ THÊM: Biến lưu số lượng kho (mặc định để 1 cho lẹ)
+  const [quantity, setQuantity] = useState('1'); 
+  
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [file, setFile] = useState<File | null>(null);
@@ -44,9 +48,7 @@ export default function NewProductPage() {
         return alert("Lỗi tải ảnh: " + uploadData.message);
       }
 
-      // ĐÂY LÀ CHỖ QUAN TRỌNG: Lấy link từ uploadData vừa nhận được
       const linkAnhChuan = uploadData.imageUrl; 
-      console.log("🔗 Link ảnh nhận được:", linkAnhChuan);
 
       // --- BƯỚC 2: GỬI SANG API LƯU SẢN PHẨM ---
       const res = await fetch('/api/products', {
@@ -56,7 +58,8 @@ export default function NewProductPage() {
           name: name,
           price: Number(price),
           basePrice: Number(price),
-          image: linkAnhChuan, // 👈 DÙNG BIẾN TRỰC TIẾP Ở ĐÂY
+          quantity: Number(quantity), // 👉 ĐÃ THÊM: Ép kiểu Số lượng sang dạng số và gửi đi
+          image: linkAnhChuan,
           description: description,
           category: category
         }),
@@ -66,7 +69,7 @@ export default function NewProductPage() {
       if (data.success) {
         alert("Đã lưu vào Database thành công!");
         router.push('/admin');
-        router.refresh(); // Làm mới dữ liệu
+        router.refresh(); 
       } else {
         alert("Lỗi Database: " + data.message);
       }
@@ -96,17 +99,37 @@ export default function NewProductPage() {
               <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: Mô hình Garen..." />
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            {/* 👉 ĐÃ SỬA: Chia thành 3 cột để nhét vừa ô Số lượng */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-gray-700 font-bold mb-2">Giá tiền</label>
-                <input type="number" required value={price} onChange={(e) => setPrice(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input type="number" required value={price} onChange={(e) => setPrice(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VNĐ" />
               </div>
+              
+              {/* 👉 ĐÃ THÊM: Khung nhập Số lượng */}
+              <div>
+                <label className="block text-gray-700 font-bold mb-2">Số lượng kho</label>
+                <input type="number" min="0" required value={quantity} onChange={(e) => setQuantity(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: 50" />
+              </div>
+
               <div>
                 <label className="block text-gray-700 font-bold mb-2">Danh mục</label>
                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none">
                   {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
               </div>
+            </div>
+
+            {/* Thêm ô nhập mô tả (description) vì lúc trước sếp chưa làm khung nhập cho nó */}
+            <div>
+              <label className="block text-gray-700 font-bold mb-2">Mô tả sản phẩm</label>
+              <textarea 
+                rows={3} 
+                value={description} 
+                onChange={(e) => setDescription(e.target.value)} 
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none" 
+                placeholder="Mô tả chi tiết về sản phẩm..." 
+              />
             </div>
 
             <div>
